@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/f83kisaph4fe61mv?svg=true)](https://ci.appveyor.com/project/MKSInc/ahj-hw-7-http-2-helpdesk-pro-frontend)
+### [Gh-page](https://mksinc.github.io/AHJ-hw.-7-HTTP.-2-HelpDesk-Pro-Frontend/)
 # 7. Домашнее задание к лекции «Работа с HTTP»
 
 Правила сдачи задания:
