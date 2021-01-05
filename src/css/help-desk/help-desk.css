@@ -1,0 +1,47 @@
+.help-desk {
+  min-width: 460px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.help-desk__control {
+  text-align: right;
+  margin-bottom: 10px;
+}
+
+.help-desk__body {
+  border: 1px solid lightgray;
+  border-radius: 3px;
+}
+
+.help-desk__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.help-desk__cell {
+  text-align: center;
+  vertical-align: top;
+  padding: 7px 5px;
+}
+
+.help-desk__row:not(:last-child) .help-desk__cell{
+  border-bottom: 1px solid lightgray;
+}
+
+.help-desk__coll-name {
+  width: 60%;
+  text-align: left;
+  padding-top: 14px;
+}
+
+.help-desk__coll-created {
+  text-align: center;
+  padding-top: 14px;
+}
+
+.help-desk__description {
+  display: block;
+  display: none;
+  margin-top: 10px;
+}
