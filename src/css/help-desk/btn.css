@@ -1,24 +1,29 @@
-.help-desk__btn {
+.btn {
   border: 1px solid #d3d3d3;
-  background-color: transparent;
+  background-color: #f7f7f7;
 
   cursor: pointer;
   outline: none;
 }
 
-.help-desk__btn:hover {
+.btn:hover {
   background-color: #efefef;
 }
 
-.help-desk__btn:focus {
+.btn:focus {
   border-color: dimgray;
 }
 
-.help-desk__btn:active {
-  background-color: #d3d3d3;
+.btn:active {
+  background-color: #dedede;
 }
 
-.help-desk__btn_type_round {
+.btn_type_rect {
+  border-radius: 3px;
+  padding: 5px 10px;
+}
+
+.btn_type_round {
   position: relative;
   width: 30px;
   height: 30px;
@@ -28,18 +33,13 @@
   font-weight: bold;
 }
 
-.help-desk__btn_type_round::after {
+.btn_type_round::after {
   position: absolute;
   top: calc(50% - .5em);
   line-height: 100%;
 }
 
-.help-desk__btn_action_add {
-  border-radius: 3px;
-  padding: 5px 10px;
-}
-
-.help-desk__btn_action_status::after {
+.btn_action_status::after {
   content: "\2714";
   top: calc(50% - .45em);
   left: calc(50% - .4em);
@@ -47,13 +47,13 @@
   color: limegreen;
 }
 
-.help-desk__btn_action_edit::after {
+.btn_action_edit::after {
   content: "\270E";
   left: calc(50% - .5em);
   font-size: 1.3em;
 }
 
-.help-desk__btn_action_delete::after {
+.btn_action_delete::after {
   content: "\2718";
   left: calc(50% - .45em);
   font-size: 1.1em;

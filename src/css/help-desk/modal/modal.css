@@ -1,0 +1,49 @@
+.modal {
+  position: absolute;
+  top: 0;
+  min-width: 300px;
+  border: 1px solid lightgrey;
+  border-radius: 20px;
+
+  box-shadow: 0 0 5px 0 grey;
+
+  background-color: #ffffff;
+
+  padding: 30px;
+}
+
+.modal__title {
+  text-align: center;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+.modal__row {
+  display: block;
+  margin-bottom: 20px;
+}
+
+.modal__prop {
+  display: block;
+  font-weight: bold;
+
+  margin-bottom: 5px;
+}
+
+.modal__value {
+  width: 100%;
+  padding: 5px;
+}
+
+.modal__value-radio {
+  margin-right: 15px;
+}
+
+.modal__control {
+  text-align: center;
+}
+
+.modal__btn {
+  width: 75px;
+  margin: 0 15px;
+}

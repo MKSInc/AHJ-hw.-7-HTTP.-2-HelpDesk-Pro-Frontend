@@ -1,4 +1,5 @@
 @import "main.css";
 @import "help-desk/help-desk.css";
-@import "help-desk/help-desk__btn.css";
+@import "help-desk/btn.css";
+@import "help-desk/modal/modal.css";
 @import "utility.css";

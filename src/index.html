@@ -18,13 +18,13 @@
   <div class="container">
     <div data-widget="help-desk" class="help-desk">
       <div class="help-desk__control">
-        <button class="help-desk__btn help-desk__btn_action_add">Add Ticket</button>
+        <button class="btn btn_type_rect">Add Ticket</button>
       </div>
       <div class="help-desk__body">
         <table class="help-desk__table">
           <tr class="help-desk__row">
             <td class="help-desk__cell">
-              <button class="help-desk__btn help-desk__btn_type_round help-desk__btn_action_status">
+              <button class="btn btn_type_round btn_action_status">
                 <span data-visibility="v-hidden">Status</span>
               </button>
             </td>
@@ -34,12 +34,12 @@
             </td>
             <td class="help-desk__cell help-desk__coll-created">10:03:19 08:40</td>
             <td class="help-desk__cell">
-              <button class="help-desk__btn help-desk__btn_type_round help-desk__btn_action_edit">
+              <button class="btn btn_type_round btn_action_edit">
                 <span data-visibility="v-hidden">Edit</span>
               </button>
             </td>
             <td class="help-desk__cell">
-              <button class="help-desk__btn help-desk__btn_type_round help-desk__btn_action_delete">
+              <button class="btn btn_type_round btn_action_delete">
                 <span data-visibility="v-hidden">Delete</span>
               </button>
             </td>
@@ -47,7 +47,7 @@
 
           <tr class="help-desk__row">
             <td class="help-desk__cell">
-              <button class="help-desk__btn help-desk__btn_type_round help-desk__btn_action_status">
+              <button class="btn btn_type_round btn_action_status">
                 <span data-visibility="v-hidden">Status</span>
               </button>
             </td>
@@ -57,18 +57,36 @@
             </td>
             <td class="help-desk__cell help-desk__coll-created">10:03:19 08:40</td>
             <td class="help-desk__cell">
-              <button class="help-desk__btn help-desk__btn_type_round help-desk__btn_action_edit">
+              <button class="btn btn_type_round btn_action_edit">
                 <span data-visibility="v-hidden">Edit</span>
               </button>
             </td>
             <td class="help-desk__cell">
-              <button class="help-desk__btn help-desk__btn_type_round help-desk__btn_action_delete">
+              <button class="btn btn_type_round btn_action_delete">
                 <span data-visibility="v-hidden">Delete</span>
               </button>
             </td>
           </tr>
-
         </table>
+
+        <form class="modal">
+          <h3 class="modal__title">Add Ticket</h3>
+          <label class="modal__row">
+            <span class="modal__prop">Name</span>
+            <input class="modal__value" type="text" name="name" required>
+          </label>
+
+          <label class="modal__row">
+            <span class="modal__prop">Description</span>
+            <textarea class="modal__value" name="description" rows="3"></textarea>
+          </label>
+
+          <div class="modal__control">
+            <button class="btn btn_type_rect modal__btn">Save</button>
+            <button class="btn btn_type_rect modal__btn">Cancel</button>
+          </div>
+
+        </form>
       </div>
 
     </div>

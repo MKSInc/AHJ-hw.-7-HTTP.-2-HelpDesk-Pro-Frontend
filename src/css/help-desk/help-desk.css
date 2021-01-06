@@ -10,6 +10,11 @@
 }
 
 .help-desk__body {
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+
   border: 1px solid lightgray;
   border-radius: 3px;
 }
@@ -23,6 +28,10 @@
   text-align: center;
   vertical-align: top;
   padding: 7px 5px;
+}
+
+.help-desk__row {
+  di1splay: none;
 }
 
 .help-desk__row:not(:last-child) .help-desk__cell{
