@@ -47,3 +47,8 @@
   width: 75px;
   margin: 0 15px;
 }
+
+.modal__content {
+  line-height: 140%;
+  margin-bottom: 20px;
+}

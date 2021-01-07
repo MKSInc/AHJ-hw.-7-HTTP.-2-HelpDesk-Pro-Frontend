@@ -16,7 +16,7 @@
   <h1>7. Домашнее задание к лекции "Работа с HTTP"</h1>
   <h2>7.2 "HelpDesk: Frontend"</h2>
   <div class="container">
-    <div data-widget="help-desk" class="help-desk">
+    <div data-widget="help-desk-temp" class="help-desk">
       <div class="help-desk__control">
         <button class="btn btn_type_rect">Add Ticket</button>
       </div>
@@ -24,6 +24,7 @@
         <table class="help-desk__table">
           <tr class="help-desk__row">
             <td class="help-desk__cell">
+              <!-- !!!!!!!!!!!!!! btn_action ??????? !!!!!!!!!!!!!!!!!!!!!!!! -->
               <button class="btn btn_type_round btn_action_status">
                 <span data-visibility="v-hidden">Status</span>
               </button>
@@ -69,7 +70,7 @@
           </tr>
         </table>
 
-        <form class="modal">
+        <form data-visibility="hidden" class="modal">
           <h3 class="modal__title">Add Ticket</h3>
           <label class="modal__row">
             <span class="modal__prop">Name</span>
@@ -85,8 +86,21 @@
             <button class="btn btn_type_rect modal__btn">Save</button>
             <button class="btn btn_type_rect modal__btn">Cancel</button>
           </div>
-
         </form>
+
+        <form data-visibility="hidden" class="modal">
+          <h3 class="modal__title">Delete Ticket</h3>
+          <p class="modal__content">
+            Are you sure you want to delete the Ticket?<br>
+            That's obviously irreversible.
+          </p>
+
+          <div class="modal__control">
+            <button class="btn btn_type_rect modal__btn">Delete</button>
+            <button class="btn btn_type_rect modal__btn">Cancel</button>
+          </div>
+        </form>
+
       </div>
 
     </div>

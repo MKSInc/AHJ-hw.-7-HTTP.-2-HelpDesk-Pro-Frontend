@@ -1,2 +1,7 @@
-// eslint-disable-next-line no-console
-console.log('main.js run');
+import HelpDesk from './HelpDesk';
+
+const container = document.getElementsByClassName('container')[0];
+
+const helpDesk = new HelpDesk(container);
+
+helpDesk.init();
