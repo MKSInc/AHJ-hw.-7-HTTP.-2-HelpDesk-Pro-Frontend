@@ -38,6 +38,8 @@
   width: 60%;
   text-align: left;
   padding-top: 14px;
+
+  cursor: pointer;
 }
 
 .help-desk__coll-created {

@@ -1,71 +1,54 @@
-/* eslint-disable no-console */
 import helpDeskHTML from '../html/help-desk.html';
+import createRequest from './createRequest';
+import getTicketRow from './getTicketRow';
 
 export default class HelpDesk {
   constructor(parentEl) {
     this.parent = parentEl;
     this.els = {
       helpDesk: null,
+      body: null,
+      table: null,
     };
 
     this.selectors = {
       helpDesk: '[data-widget="help-desk"]',
+      body: '[data-id="body"]',
+      table: '[data-id="table"]',
     };
+
+    this.ticketsID = new Map();
   }
 
   async init() {
-    console.log(this.parent);
     this.parent.insertAdjacentHTML('beforeend', helpDeskHTML);
 
     this.els.helpDesk = this.parent.querySelector(this.selectors.helpDesk);
+    this.els.body = this.els.helpDesk.querySelector(this.selectors.body);
+    this.els.table = this.els.body.querySelector(this.selectors.table);
     console.log('HelpDesk This:', this);
-    // this.createRequest({ method: 'GET', params: { method: 'allTickets' } });
-    const data = await this.createRequest({ params: { method: 'allTickets' } });
-    console.log('Data:', data);
+
+    try {
+      const allTickets = await createRequest({ params: { method: 'allTickets' } });
+      console.log('Data:', allTickets);
+      this.updateTable(allTickets);
+      console.log(this.ticketsID);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+    }
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  getURLParams(params) {
-    const urlParams = new URLSearchParams();
-    urlParams.append('method', params.method);
-    if (params.id) urlParams.append('id', params.id);
-    return `/?${urlParams}`;
-  }
-
-  createRequest({ params, formData }) {
-    console.log('createRequest start');
-    return new Promise((resolve, reject) => {
-      if (params && formData) reject(new Error('(MKS) createRequest method takes only one argument: \'params\' or \'formData\' !'));
-
-      const URL = 'http://localhost:3000';
-      const xhr = new XMLHttpRequest();
-
-      let method = 'GET';
-      let urlParams = '';
-
-      if (params) urlParams = this.getURLParams(params);
-      else if (formData) method = 'POST';
-
-      console.log('URL:', URL + urlParams);
-
-      xhr.open(method, URL + urlParams);
-
-      xhr.addEventListener('load', () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          try {
-            const data = JSON.parse(xhr.response);
-            console.log(data);
-            resolve(data);
-          } catch (e) {
-            console.error(e);
-            reject(e);
-          }
-        } else reject(new Error(`(MKS) ${xhr.status}: ${xhr.responseText}`));
-      });
-
-      xhr.addEventListener('error', () => reject(new Error('(MKS) Connection error!')));
-
-      xhr.send(formData);
-    });
+  updateTable(allTickets) {
+    this.els.table.innerHTML = '';
+    const ticketRowEls = [];
+    for (const ticket of allTickets) {
+      const ticketRowEl = getTicketRow(ticket);
+      ticketRowEls.push(ticketRowEl);
+      this.ticketsID.set(ticketRowEl, ticket.id);
+    }
+    console.log('ticketRowEls', ticketRowEls);
+    this.els.table.append(...ticketRowEls);
+    ticketRowEls.length = 0;
   }
 }
