@@ -48,7 +48,10 @@ export default class HelpDesk {
     for (const ticket of allTickets) {
       const ticketRowEl = getTicketRow(ticket);
       ticketRowEls.push(ticketRowEl);
-      this.ticketsID.set(ticketRowEl, { id: ticket.id, isFullDescShow: false });
+      this.ticketsID.set(ticketRowEl, {
+        id: ticket.id,
+        isFullDescShow: false,
+      });
     }
 
     this.els.table.append(...ticketRowEls);
@@ -65,10 +68,11 @@ export default class HelpDesk {
     console.log('actionEl', actionEl);
     if (!actionEl) return;
 
+    const ticketRowEl = actionEl.closest('[data-table="ticket-row"]');
+    const ticketProp = this.ticketsID.get(ticketRowEl);
+
     // Если нажали на показать/скрыть описание.
     if (actionEl.dataset.action === 'description') {
-      const ticketRowEl = actionEl.closest('[data-table="ticket-row"]');
-      const ticketProp = this.ticketsID.get(ticketRowEl);
       const ticketFullDescEl = actionEl.querySelector('[data-ticket="description"]');
 
       // Если полное описание нажатого тикета скрыто, то делаем запрос на сервер и показываем.
@@ -87,6 +91,22 @@ export default class HelpDesk {
         ticketFullDescEl.dataset.visibility = 'hidden';
         ticketFullDescEl.innerText = '';
         ticketProp.isFullDescShow = false;
+      }
+    }
+
+    if (actionEl.dataset.action === 'status') {
+      const formData = new FormData();
+      formData.append('method', 'changeStatus');
+      formData.append('id', ticketProp.id);
+
+      try {
+        const ticketStatus = await createRequest({ formData });
+        actionEl.dataset.ticketStatus = ticketStatus.status;
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('Не удалось поменять статус заявки.');
+        // eslint-disable-next-line no-console
+        console.error(e);
       }
     }
   }

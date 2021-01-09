@@ -17,12 +17,12 @@ export default function getTicketRow(ticket) {
     </td>
     <td class="help-desk__cell help-desk__coll-created">${date} ${time}</td>
     <td class="help-desk__cell">
-      <button data-table="action" class="btn btn_type_round btn_action_edit">
+      <button data-table="action" data-action="edit" class="btn btn_type_round btn_action_edit">
         <span data-visibility="v-hidden">Edit</span>
       </button>
     </td>
     <td class="help-desk__cell">
-      <button data-table="action" class="btn btn_type_round btn_action_delete">
+      <button data-table="action" data-action="delete" class="btn btn_type_round btn_action_delete">
         <span data-visibility="v-hidden">Delete</span>
       </button>
     </td>
