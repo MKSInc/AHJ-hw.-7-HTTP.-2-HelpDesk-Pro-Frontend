@@ -9,3 +9,7 @@
   height: 1px;
   clip: rect(1px, 1px, 1px, 1px);
 }
+
+[data-ticket-status="todo"]::after {
+  display: none;
+}
