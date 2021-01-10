@@ -29,8 +29,8 @@ export default function createRequest({ params, formData }) {
       return;
     }
 
-    const URL = 'http://localhost:3000';
-    // const URL = 'https://ahj-7-2-helpdesk-pro.herokuapp.com';
+    // const URL = 'http://localhost:3000';
+    const URL = 'https://ahj-7-2-helpdesk-pro.herokuapp.com';
     const xhr = new XMLHttpRequest();
 
     let method = 'GET';
