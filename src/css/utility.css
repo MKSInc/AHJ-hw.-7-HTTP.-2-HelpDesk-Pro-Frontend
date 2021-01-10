@@ -10,6 +10,10 @@
   clip: rect(1px, 1px, 1px, 1px);
 }
 
+[data-visibility="shaded"] {
+  opacity: 0.3;
+}
+
 [data-ticket-status="todo"]::after {
   display: none;
 }

@@ -1,17 +1,19 @@
-<form data-visibility="hidden" class="modal">
-  <h3 class="modal__title">Add Ticket</h3>
-  <label class="modal__row">
-    <span class="modal__prop">Name</span>
-    <input class="modal__value" type="text" name="name" required>
-  </label>
+<div data-modal="ticket" data-visibility="hidden" class="modal">
+  <form data-modal="form" class="modal__form">
+    <h3 data-modal="title" class="modal__title"></h3>
+    <label class="modal__row">
+      <span class="modal__prop">Name</span>
+      <input data-name="value" class="modal__value" type="text" name="name" required>
+    </label>
 
-  <label class="modal__row">
-    <span class="modal__prop">Description</span>
-    <textarea class="modal__value" name="description" rows="3"></textarea>
-  </label>
+    <label class="modal__row">
+      <span class="modal__prop">Description</span>
+      <textarea data-description="value" class="modal__value" name="description" rows="3"></textarea>
+    </label>
 
-  <div class="modal__control">
-    <button class="btn btn_type_rect modal__btn">Save</button>
-    <button class="btn btn_type_rect modal__btn">Cancel</button>
-  </div>
-</form>
+    <div class="modal__control">
+      <button data-action="save" class="btn btn_type_rect modal__btn">Save</button>
+      <button data-action="cancel" class="btn btn_type_rect modal__btn">Cancel</button>
+    </div>
+  </form>
+</div>

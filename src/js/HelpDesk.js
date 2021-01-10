@@ -1,4 +1,5 @@
 import helpDeskHTML from '../html/help-desk.html';
+import ModalTicket from './ModalTicket';
 import createRequest from './createRequest';
 import getTicketRow from './getTicketRow';
 
@@ -9,12 +10,19 @@ export default class HelpDesk {
       helpDesk: null,
       body: null,
       table: null,
+      btnAdd: null,
     };
 
     this.selectors = {
       helpDesk: '[data-widget="help-desk"]',
       body: '[data-id="body"]',
       table: '[data-id="table"]',
+      btnAdd: '[data-action="add"]',
+    };
+
+    this.modal = {
+      ticket: null,
+      confirm: null,
     };
 
     this.ticketsID = new Map();
@@ -25,8 +33,12 @@ export default class HelpDesk {
 
     this.els.helpDesk = this.parent.querySelector(this.selectors.helpDesk);
     this.els.body = this.els.helpDesk.querySelector(this.selectors.body);
+
     this.els.table = this.els.body.querySelector(this.selectors.table);
     this.els.table.addEventListener('click', this.onTableClick.bind(this));
+
+    this.els.btnAdd = this.els.helpDesk.querySelector(this.selectors.btnAdd);
+    this.els.btnAdd.addEventListener('click', this.onBtnAddClick.bind(this));
 
     console.log('HelpDesk This:', this);
 
@@ -39,6 +51,8 @@ export default class HelpDesk {
       // eslint-disable-next-line no-console
       console.error(e);
     }
+
+    this.modal.ticket = new ModalTicket();
   }
 
   updateTable(allTickets) {
@@ -84,6 +98,8 @@ export default class HelpDesk {
           ticketProp.isFullDescShow = true;
         } catch (e) {
           // eslint-disable-next-line no-console
+          console.error('Не удалось получить описание заявки.');
+          // eslint-disable-next-line no-console
           console.error(e);
         }
         // Если полное описание тикета показано, то удаляем его.
@@ -109,5 +125,22 @@ export default class HelpDesk {
         console.error(e);
       }
     }
+
+    if (actionEl.dataset.action === 'edit') {
+      try {
+        const ticketById = await createRequest({ params: { method: 'ticketById', id: ticketProp.id } });
+        this.modal.ticket.show(ticketById);
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('Не удалось получить данные редактируемой заявки.');
+        // eslint-disable-next-line no-console
+        console.error(e);
+      }
+    }
+  }
+
+  onBtnAddClick() {
+    // Активировать модольное окно для создания тикета.
+    this.modal.ticket.show();
   }
 }

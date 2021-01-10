@@ -1,9 +1,20 @@
 .modal {
-  position: absolute;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.modal__form {
   min-width: 300px;
   border: 1px solid lightgrey;
-  border-radius: 20px;
+  border-radius: 4px;
 
   box-shadow: 0 0 5px 0 grey;
 
@@ -32,7 +43,15 @@
 
 .modal__value {
   width: 100%;
-  padding: 5px;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+
+  padding: 7px;
+  outline: none;
+}
+
+.modal__value:focus {
+  border-color: dimgray;
 }
 
 .modal__value-radio {
