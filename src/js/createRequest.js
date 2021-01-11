@@ -39,8 +39,6 @@ export default function createRequest({ params, formData }) {
     if (params) urlParams = getURLParams(params);
     else if (formData) method = 'POST';
 
-    console.log('URL:', URL + urlParams);
-
     xhr.open(method, URL + urlParams);
 
     xhr.addEventListener('load', () => {

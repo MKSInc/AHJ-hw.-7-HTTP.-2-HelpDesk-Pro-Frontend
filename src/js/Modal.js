@@ -37,7 +37,6 @@ export default class Modal {
 
     this.els.modal = ht.el.querySelector(this.selectors.modal);
     this.els.form = this.els.modal.querySelector(this.selectors.form);
-    // !!!!!!!!!!!
     this.els.form.addEventListener('submit', this.onFormSubmit.bind(this));
 
     this.els.btnCancel = this.els.form.querySelector(this.selectors.btnCancel);
@@ -78,7 +77,7 @@ export default class Modal {
     document.addEventListener('keydown', this.handlers.onDocKeydown);
     this.docContainerEL.dataset.visibility = 'shaded';
     this.els.modal.removeAttribute('data-visibility');
-    this.els.nameValue.focus();
+    this.firstEl.focus();
 
     // Можно убрать прокрутку страницы во время показа модального окна.
     // В данном случае возможность прокрутки оставлена.
@@ -107,7 +106,6 @@ export default class Modal {
   // eslint-disable-next-line class-methods-use-this
   onFormSubmit(event) {
     event.preventDefault();
-    console.log('Form submit');
   }
 
   // Вариант центрирования модального окна (либо чего другого) через js.

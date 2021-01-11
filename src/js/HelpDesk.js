@@ -1,5 +1,6 @@
 import helpDeskHTML from '../html/help-desk.html';
 import ModalTicket from './ModalTicket';
+import ModalConfirm from './ModalConfirm';
 import createRequest from './createRequest';
 import getTicketRow from './getTicketRow';
 
@@ -20,6 +21,8 @@ export default class HelpDesk {
       btnAdd: '[data-action="add"]',
       name: '[data-ticket="name"]',
       description: '[data-ticket="description"]',
+      ticketRow: '[data-table="ticket-row"]',
+      action: '[data-table="action"]',
     };
 
     this.modal = {
@@ -44,8 +47,6 @@ export default class HelpDesk {
     this.els.btnAdd = this.els.helpDesk.querySelector(this.selectors.btnAdd);
     this.els.btnAdd.addEventListener('click', this.onBtnAddClick.bind(this));
 
-    console.log('HelpDesk This:', this);
-
     try {
       const allTickets = await createRequest({ params: { method: 'allTickets' } });
       if (!allTickets.success) throw new Error(allTickets.data);
@@ -57,6 +58,7 @@ export default class HelpDesk {
     }
 
     this.modal.ticket = new ModalTicket();
+    this.modal.confirm = new ModalConfirm();
   }
 
   updateTable(allTickets) {
@@ -79,11 +81,10 @@ export default class HelpDesk {
   async onTableClick(event) {
     // Определяем было ли нажато на один из элементов, которые подразумевают ответное действие:
     // поменять статус, показать/скрыть описание, редактировать, удалить. Если нет - выходим.
-    this.actionEl = event.target.closest('[data-table="action"]');
-    console.log('actionEl', this.actionEl);
+    this.actionEl = event.target.closest(this.selectors.action);
     if (!this.actionEl) return;
 
-    const ticketRowEl = this.actionEl.closest('[data-table="ticket-row"]');
+    const ticketRowEl = this.actionEl.closest(this.selectors.ticketRow);
     const ticketProp = this.ticketsID.get(ticketRowEl);
     const { action } = this.actionEl.dataset;
 
@@ -179,8 +180,28 @@ export default class HelpDesk {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this,no-unused-vars,no-empty-function
   async actionDelete({ ticketRowEl, ticketProp }) {
+    const result = await this.modal.confirm.show();
+    if (!result) return;
+
+    if (result === 'delete') {
+      const formData = new FormData();
+      formData.set('method', 'deleteTicket');
+      formData.set('id', ticketProp.id);
+
+      try {
+        const deleteTicket = await createRequest({ formData });
+        if (!deleteTicket.success) throw new Error(deleteTicket.dataset);
+
+        ticketRowEl.remove();
+        this.els.btnAdd.focus();
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('Не удалось удалить заявку.');
+        // eslint-disable-next-line no-console
+        console.error(e);
+      }
+    }
   }
 
   async onBtnAddClick() {

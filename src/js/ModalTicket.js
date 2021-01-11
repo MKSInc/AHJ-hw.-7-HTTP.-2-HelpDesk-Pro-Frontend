@@ -1,5 +1,5 @@
-import Modal from './Modal';
 import modalTicketHTML from '../html/modal-ticket.html';
+import Modal from './Modal';
 
 export default class ModalTicket extends Modal {
   constructor() {
