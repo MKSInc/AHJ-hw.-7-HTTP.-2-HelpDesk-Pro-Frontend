@@ -12,7 +12,7 @@ export default function getTicketRow(ticket) {
       </button>
     </td>
     <td data-table="action" data-action="description" class="help-desk__cell help-desk__coll-name">
-      <span>${ticket.name}</span>
+      <span data-ticket="name">${ticket.name}</span>
       <p data-ticket="description" data-visibility="hidden" class="help-desk__description"></p>
     </td>
     <td class="help-desk__cell help-desk__coll-created">${date} ${time}</td>

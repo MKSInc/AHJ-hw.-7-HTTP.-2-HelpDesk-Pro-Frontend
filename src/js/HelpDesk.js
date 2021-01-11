@@ -18,6 +18,8 @@ export default class HelpDesk {
       body: '[data-id="body"]',
       table: '[data-id="table"]',
       btnAdd: '[data-action="add"]',
+      name: '[data-ticket="name"]',
+      description: '[data-ticket="description"]',
     };
 
     this.modal = {
@@ -26,6 +28,8 @@ export default class HelpDesk {
     };
 
     this.ticketsID = new Map();
+
+    this.actionEl = null;
   }
 
   async init() {
@@ -44,9 +48,9 @@ export default class HelpDesk {
 
     try {
       const allTickets = await createRequest({ params: { method: 'allTickets' } });
-      console.log('Data:', allTickets);
-      this.updateTable(allTickets);
-      console.log(this.ticketsID);
+      if (!allTickets.success) throw new Error(allTickets.data);
+
+      this.updateTable(allTickets.data);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
@@ -73,74 +77,144 @@ export default class HelpDesk {
   }
 
   async onTableClick(event) {
-    console.log('target', event.target);
-    const { target } = event;
-
     // Определяем было ли нажато на один из элементов, которые подразумевают ответное действие:
     // поменять статус, показать/скрыть описание, редактировать, удалить. Если нет - выходим.
-    const actionEl = target.closest('[data-table="action"]');
-    console.log('actionEl', actionEl);
-    if (!actionEl) return;
+    this.actionEl = event.target.closest('[data-table="action"]');
+    console.log('actionEl', this.actionEl);
+    if (!this.actionEl) return;
 
-    const ticketRowEl = actionEl.closest('[data-table="ticket-row"]');
+    const ticketRowEl = this.actionEl.closest('[data-table="ticket-row"]');
     const ticketProp = this.ticketsID.get(ticketRowEl);
+    const { action } = this.actionEl.dataset;
 
-    // Если нажали на показать/скрыть описание.
-    if (actionEl.dataset.action === 'description') {
-      const ticketFullDescEl = actionEl.querySelector('[data-ticket="description"]');
-
-      // Если полное описание нажатого тикета скрыто, то делаем запрос на сервер и показываем.
-      if (!ticketProp.isFullDescShow) {
-        try {
-          const ticketById = await createRequest({ params: { method: 'ticketById', id: ticketProp.id } });
-          ticketFullDescEl.innerText = ticketById.description;
-          ticketFullDescEl.removeAttribute('data-visibility');
-          ticketProp.isFullDescShow = true;
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.error('Не удалось получить описание заявки.');
-          // eslint-disable-next-line no-console
-          console.error(e);
-        }
-        // Если полное описание тикета показано, то удаляем его.
-      } else {
-        ticketFullDescEl.dataset.visibility = 'hidden';
-        ticketFullDescEl.innerText = '';
-        ticketProp.isFullDescShow = false;
-      }
-    }
-
-    if (actionEl.dataset.action === 'status') {
-      const formData = new FormData();
-      formData.append('method', 'changeStatus');
-      formData.append('id', ticketProp.id);
-
-      try {
-        const ticketStatus = await createRequest({ formData });
-        actionEl.dataset.ticketStatus = ticketStatus.status;
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('Не удалось поменять статус заявки.');
-        // eslint-disable-next-line no-console
-        console.error(e);
-      }
-    }
-
-    if (actionEl.dataset.action === 'edit') {
-      try {
-        const ticketById = await createRequest({ params: { method: 'ticketById', id: ticketProp.id } });
-        this.modal.ticket.show(ticketById);
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('Не удалось получить данные редактируемой заявки.');
-        // eslint-disable-next-line no-console
-        console.error(e);
-      }
+    switch (action) {
+      case 'description': this.actionDescription({ ticketProp });
+        return;
+      case 'status': this.actionStatus({ ticketProp });
+        return;
+      case 'edit': this.actionEdit({ ticketRowEl, ticketProp });
+        return;
+      case 'delete': this.actionDelete({ ticketRowEl, ticketProp });
+        return;
+      // eslint-disable-next-line no-console
+      default: console.error(`Действие (action=${action}) пользователя не определено!`);
     }
   }
 
-  onBtnAddClick() {
-    // Активировать модольное окно для создания тикета.
-    this.modal.ticket.show();
+  async actionDescription({ ticketProp }) {
+    const ticketFullDescEl = this.actionEl.querySelector(this.selectors.description);
+
+    // Если полное описание нажатого тикета скрыто, то делаем запрос на сервер и показываем.
+    if (!ticketProp.isFullDescShow) {
+      try {
+        const ticketById = await createRequest({ params: { method: 'ticketById', id: ticketProp.id } });
+        if (!ticketById.success) throw new Error(ticketById.data);
+
+        const { description } = ticketById.data;
+        if (description === '') return;
+        ticketFullDescEl.innerText = description;
+        ticketFullDescEl.removeAttribute('data-visibility');
+        // eslint-disable-next-line no-param-reassign
+        ticketProp.isFullDescShow = true;
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('Не удалось получить описание заявки.');
+        // eslint-disable-next-line no-console
+        console.error(e);
+      }
+      // Если полное описание тикета показано, то удаляем его.
+    } else {
+      ticketFullDescEl.dataset.visibility = 'hidden';
+      ticketFullDescEl.innerText = '';
+      // eslint-disable-next-line no-param-reassign
+      ticketProp.isFullDescShow = false;
+    }
+  }
+
+  async actionStatus({ ticketProp }) {
+    const formData = new FormData();
+    formData.append('method', 'changeStatus');
+    formData.append('id', ticketProp.id);
+
+    try {
+      const ticketStatus = await createRequest({ formData });
+      if (!ticketStatus.success) throw new Error(ticketStatus.data);
+
+      this.actionEl.dataset.ticketStatus = ticketStatus.data;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('Не удалось поменять статус заявки.');
+      // eslint-disable-next-line no-console
+      console.error(e);
+    }
+  }
+
+  async actionEdit({ ticketRowEl, ticketProp }) {
+    try {
+      const ticketById = await createRequest({ params: { method: 'ticketById', id: ticketProp.id } });
+      if (!ticketById.success) throw new Error(ticketById.data);
+
+      const formData = await this.modal.ticket.show(ticketById.data);
+      if (!formData) return;
+
+      formData.set('method', 'updateTicket');
+      formData.set('id', ticketProp.id);
+      this.actionEl.focus();
+
+      const updateTicket = await createRequest({ formData });
+      if (!updateTicket.success) throw new Error(updateTicket.data);
+
+      // eslint-disable-next-line no-param-reassign
+      ticketRowEl.querySelector(this.selectors.name).innerText = updateTicket.data.name;
+      if (ticketProp.isFullDescShow) {
+        // eslint-disable-next-line no-param-reassign
+        ticketRowEl.querySelector(this.selectors.description)
+          .innerText = updateTicket.data.description;
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('Не удалось получить данные редактируемой заявки.');
+      // eslint-disable-next-line no-console
+      console.error(e);
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this,no-unused-vars,no-empty-function
+  async actionDelete({ ticketRowEl, ticketProp }) {
+  }
+
+  async onBtnAddClick() {
+    // Показать модольное окно для создания тикета.
+    const formData = await this.modal.ticket.show();
+    this.els.btnAdd.focus();
+    if (!formData) return;
+
+    formData.set('id', null);
+    formData.set('method', 'createTicket');
+
+    try {
+      const createTicket = await createRequest({ formData });
+      if (!createTicket.success) throw new Error(createTicket.data);
+
+      // Вариант без перерисовки всей таблицы после добавленя заявки.
+      // Просто добавляется одна строка с новой заявкой.
+      const ticketRowEl = getTicketRow(createTicket.data);
+      this.ticketsID.set(ticketRowEl, {
+        id: createTicket.data.id,
+        isFullDescShow: false,
+      });
+
+      this.els.table.append(ticketRowEl);
+
+      // Можно было бы также при созадании заявки возвращать с сервера все заявки
+      // и обновлять таблицу одной строчкой, но тогда будет перерисовываться вся таблица
+      // и будут закрыты все открытые описания.
+      // this.updateTable(createTicket.data);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('Не удалось добавить заявку.');
+      // eslint-disable-next-line no-console
+      console.error(e);
+    }
   }
 }
